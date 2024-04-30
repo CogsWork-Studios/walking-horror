@@ -14,7 +14,9 @@
 #include "InputActionValue.h"
 
 // Sets default values
-AEmma::AEmma()
+AEmma::AEmma():
+	isCrouching(false),
+	isRunning(true)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -35,7 +37,7 @@ AEmma::AEmma()
 	// instead of recompiling to adjust them
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
-	GetCharacterMovement()->MaxWalkSpeed = 500.f;
+	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
@@ -95,7 +97,31 @@ void AEmma::Look(const FInputActionValue& Value)
 
 void AEmma::Crouch(const FInputActionValue& Value) 
 {
-	// Coming Soon
+	if (isCrouching) {
+		isCrouching = false;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT(" EMMA CPP UnCrouch!"));
+	}
+	else {
+		isCrouching = true;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT(" EMMA CPP Crouch!"));
+	}
+}
+
+void AEmma::Run(const FInputActionValue& Value)
+{
+	if (isRunning) {
+		isRunning = false;
+		GetCharacterMovement()->MaxWalkSpeed = 300;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT(" EMMA CPP Walking Speed!"));
+		//Set Slower Speed
+		
+	}
+	else {
+		//Set Running Speed
+		GetCharacterMovement()->MaxWalkSpeed = 600;
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT(" EMMA CPP Running Speed!"));
+		isRunning = true;
+	}
 }
 
 // Called every frame
@@ -132,6 +158,9 @@ void AEmma::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		// Crouching
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AEmma::Crouch);
+
+		// Toggle Run
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AEmma::Run);
 	}
 	else
 	{
