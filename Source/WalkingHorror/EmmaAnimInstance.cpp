@@ -4,6 +4,7 @@
 #include "EmmaAnimInstance.h"
 #include "Emma.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include <Kismet/KismetMathLibrary.h>
 
 UEmmaAnimInstance::UEmmaAnimInstance() :
 	bCrouch(false),bRunning(false), bIsInAir(false),
@@ -19,10 +20,17 @@ void UEmmaAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		//Get crouching/running data from emma.cpp
 		bCrouch = Emma->GetCrouching();
 		bRunning = Emma->GetIsRunning();
-
+		
 		//Get Speed
 		FVector Velocity{ Emma->GetVelocity() };
 		Velocity.Z = 0;
+		//Get Direction
+		const float RawDirection = EmmaAnimInstance->CalculateDirection(Velocity, Emma->GetActorRotation());
+		Direction = UKismetMathLibrary::NormalizeAxis(RawDirection);
+		
+		//Foward
+
+
 		Speed = Velocity.Size();
 		bIsInAir = Emma->GetCharacterMovement()->IsFalling();
 		
@@ -41,6 +49,7 @@ void UEmmaAnimInstance::UpdateAnimationProperties(float DeltaTime)
 void UEmmaAnimInstance::NativeInitializeAnimation()
 {
 	//Create Coupling between Character class and Anim Instance
+	EmmaAnimInstance = this;
 	CastActor();
 }
 

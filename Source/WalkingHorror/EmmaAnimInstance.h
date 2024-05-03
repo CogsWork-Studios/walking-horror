@@ -6,6 +6,15 @@
 #include "Animation/AnimInstance.h"
 #include "EmmaAnimInstance.generated.h"
 
+
+UENUM(BlueprintType)
+enum class EDirectionOrientation : uint8 {
+	E_Left UMETA(DisplayName = "Left Orientation"),
+	E_Right UMETA(DisplayName = "Right Orientation"),
+	E_Forward UMETA(DisplayName = "Forward Orientation"),
+	E_Backward UMETA(DisplayName = "Backward Orientation"),
+};
+
 /**
  * 
  */
@@ -26,6 +35,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess ="true"))
 	class AEmma* Emma;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	class UAnimInstance* EmmaAnimInstance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	EDirectionOrientation DirectionOrientation;
+
 	void CastActor();
 
 	/** Speed of character*/
@@ -43,5 +58,8 @@ private:
 	/**Whether or not the character is Accelerating*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	bool bIsAccelerating;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float Direction;
 
 };	
