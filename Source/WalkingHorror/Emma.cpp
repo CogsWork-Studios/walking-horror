@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Emma.h"
-
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -98,11 +97,27 @@ void AEmma::Crouch(const FInputActionValue& Value)
 	// Coming Soon
 }
 
+void AEmma::Save(const FInputActionValue& Value) 
+{
+	if (GEngine)
+	{
+		// FString::Printf(TEXT("Position: %s"), *GetActorLocation().ToString())
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Position: %s"), *GetActorLocation().ToString()));
+	}
+
+	SaveCharacterLocation(this);
+}
+
+void AEmma::Load(const FInputActionValue& Value) 
+{
+	UE_LOG(LogTemp, Warning, TEXT("Load Button Pressed"));
+	LoadCharacterLocation(this);
+}
+
 // Called every frame
 void AEmma::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -132,10 +147,23 @@ void AEmma::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		// Crouching
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AEmma::Crouch);
+
+		// Saving
+		EnhancedInputComponent->BindAction(SaveAction, ETriggerEvent::Triggered, this, &AEmma::Save);
+
+		// Loading
+		EnhancedInputComponent->BindAction(LoadAction, ETriggerEvent::Triggered, this, &AEmma::Load);
 	}
 	else
 	{
 		//UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
 }
+
+
+
+//FArchive& operator<<(FArchive& Ar, AEmma& EmmaData) 
+//{
+//	Ar << EmmaData.GetActorLocation();
+//}
 
