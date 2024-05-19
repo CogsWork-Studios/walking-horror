@@ -12,6 +12,9 @@
 #include "InputTriggers.h"
 #include "InputActionValue.h"
 
+#include "MySaveGame.h"
+#include <Kismet/GameplayStatics.h>
+
 // Sets default values
 AEmma::AEmma()
 {
@@ -105,13 +108,15 @@ void AEmma::Save(const FInputActionValue& Value)
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Position: %s"), *GetActorLocation().ToString()));
 	}
 
-	SaveCharacterLocation(this);
+	SaveGame();
 }
 
 void AEmma::Load(const FInputActionValue& Value) 
 {
 	UE_LOG(LogTemp, Warning, TEXT("Load Button Pressed"));
-	LoadCharacterLocation(this);
+	//LoadCharacterLocation(this);
+
+	LoadGame();
 }
 
 // Called every frame
@@ -160,10 +165,14 @@ void AEmma::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 }
 
+void AEmma::SaveGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("SaveGameDelegate"));
+	UMySaveGame::Save(this);
+}
 
-
-//FArchive& operator<<(FArchive& Ar, AEmma& EmmaData) 
-//{
-//	Ar << EmmaData.GetActorLocation();
-//}
-
+void AEmma::LoadGame()
+{
+	UE_LOG(LogTemp, Warning, TEXT("LoadGameDelegate"));
+	UMySaveGame::Load(this);
+}
