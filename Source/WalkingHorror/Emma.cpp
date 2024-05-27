@@ -12,9 +12,13 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputTriggers.h"
 #include "InputActionValue.h"
+#include "WalkingHorrorUserWidget.h"
+#include "WalkingHorrorHUD.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 AEmma::AEmma()
+	:bPauseAndShowMenu(false)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -98,6 +102,17 @@ void AEmma::Crouch(const FInputActionValue& Value)
 	// Coming Soon
 }
 
+void AEmma::ShowMenu(const FInputActionValue& Value)
+{
+	if (bPauseAndShowMenu == true) {
+		bPauseAndShowMenu = false;
+	}
+	else {
+		bPauseAndShowMenu = true;
+	}
+	
+}
+
 // Called every frame
 void AEmma::Tick(float DeltaTime)
 {
@@ -132,6 +147,10 @@ void AEmma::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 		// Crouching
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AEmma::Crouch);
+
+		// Show Menu
+		EnhancedInputComponent->BindAction(PromptMenuAction, ETriggerEvent::Triggered, this, &AEmma::ShowMenu);
+
 	}
 	else
 	{

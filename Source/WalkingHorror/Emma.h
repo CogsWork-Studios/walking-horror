@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Emma.generated.h"
-
+class AWalkingHorrorHUD;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UWalkingHorrorUserWidget;
 struct FInputActionValue;
 
 UCLASS()
@@ -20,7 +21,8 @@ class WALKINGHORROR_API AEmma : public ACharacter
 	/* Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
-
+/*	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<AWalkingHorrorHUD> HorrorHUD;*/
 	/* Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
@@ -40,8 +42,17 @@ class WALKINGHORROR_API AEmma : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* CrouchAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PromptMenuAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	bool isCrouching;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	bool bPauseAndShowMenu;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Widget, meta = (AllowPrivateAccess = "true"))
+	UWalkingHorrorUserWidget* MainMenuWidget;
 
 public:
 	// Sets default values for this character's properties
@@ -63,6 +74,8 @@ protected:
 
 	void Crouch(const FInputActionValue& Value);
 
+	void ShowMenu(const FInputActionValue& Value);
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
